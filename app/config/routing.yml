@@ -1,0 +1,3 @@
+sg_platform:
+    resource: "@SGPlatformBundle/Resources/config/routing.yml"
+    prefix:   /platform

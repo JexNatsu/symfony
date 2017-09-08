@@ -1,0 +1,43 @@
+sg_platform_home:
+    path:      /{page}
+    defaults:
+        _controller: SGPlatformBundle:Advert:index
+        page:        1
+    requirements:
+        page: \d*
+    
+sg_platform_view:
+    path:      /advert/{id}
+    defaults:
+        _controller: SGPlatformBundle:Advert:view
+    requirements:
+        id: \d+
+
+# Ajout - Modification - Suppression
+sg_platform_add:
+    path:      /add
+    defaults:
+        _controller: SGPlatformBundle:Advert:add
+
+sg_platform_edit:
+    path:      /edit/{id}
+    defaults:
+        _controller: SGPlatformBundle:Advert:edit
+    requirements:
+        id: \d+
+
+sg_platform_delete:
+    path:      /delete/{id}
+    defaults:
+        _controller: SGPlatformBundle:Advert:delete
+    requirements:
+        id: \d+
+
+#sg_platform_view_slug:
+#    path:      /{year}/{slug}.{_format}
+#    defaults:
+#        _controller: SGPlatformBundle:Advert:viewSlug
+#        _format:      html
+#    requirements:
+#        year:   \d{4}
+#        _format: html|xml
