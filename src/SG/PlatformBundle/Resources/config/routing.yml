@@ -11,7 +11,7 @@ sg_platform_view:
     defaults:
         _controller: SGPlatformBundle:Advert:view
     requirements:
-        id: \d+
+        advert_id: \d+
 
 # Ajout - Modification - Suppression
 sg_platform_add:
@@ -32,6 +32,18 @@ sg_platform_delete:
         _controller: SGPlatformBundle:Advert:delete
     requirements:
         id: \d+
+
+sg_platform_purge:
+    path:     /purge/{days}
+    defaults:
+        _controller: SGPlatformBundle:Advert:purge
+    requirements:
+        days: \d+
+
+sg_platform_test:
+    path:      /test
+    defaults:
+        _controller: SGPlatformBundle:Advert:test
 
 #sg_platform_view_slug:
 #    path:      /{year}/{slug}.{_format}

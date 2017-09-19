@@ -1,24 +1,24 @@
 {% extends "SGPlatformBundle::layout.html.twig" %}
 
 {% block title %}
-    Ajouter une annonce - {{ parent() }}
+    {{ "Ajouter une annonce"|trans }} - {{ parent() }}
 {% endblock %}
 
 {% block sgplatform_body %}
 
-    <h2>Ajouter une annonce</h2>
+    <h2>{{ "Ajouter une annonce"|trans }}</h2>
 
     {{ include("SGPlatformBundle:Advert:form.html.twig") }}
 
     <p>
-        Attention : cette annonce sera ajoutée directement
-        sur la page d'accueil après validation du formulaire.
+        {% trans %}Attention : cette annonce sera ajoutée directement
+        sur la page d'accueil après validation du formulaire.{% endtrans %}
     </p>
 
     <p>
         <a href="{{ path('sg_platform_home') }}" class="btn btn-default">
             <i class="glyphicon glyphicon-chevron-left"></i>
-            Retour à la liste
+            {{ "Retour à la liste"|trans }}
         </a>
     </p>
 

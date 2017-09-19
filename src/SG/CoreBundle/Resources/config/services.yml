@@ -1,0 +1,4 @@
+services:
+#    sg_core.example:
+#        class: SG\CoreBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

@@ -1,3 +1,17 @@
+sg_core:
+    resource: "@SGCoreBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}
+    requirements:
+        _locale: en|fr
+
+sg_user:
+    resource: "@SGUserBundle/Resources/config/routing.xml"
+    prefix:   /{_locale}
+    requirements:
+        _locale: en|fr
+
 sg_platform:
     resource: "@SGPlatformBundle/Resources/config/routing.yml"
-    prefix:   /platform
+    prefix:   /{_locale}/platform
+    requirements:
+        _locale: en|fr

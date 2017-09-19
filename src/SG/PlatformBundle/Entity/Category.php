@@ -62,5 +62,10 @@ class Category
     {
         return $this->name;
     }
+
+    public function getDisplay(){
+        $display = $this->name;
+        return $display;
+    }
 }
 

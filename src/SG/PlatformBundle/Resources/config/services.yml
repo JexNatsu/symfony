@@ -1,23 +1,76 @@
 services:
-#    sg_platform.example:
-#        class: SG\PlatformBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
-
+    # Mon service Antispam
     sg_platform.antispam:
         class: SG\PlatformBundle\Antispam\SGAntispam
         arguments:
             - "@mailer"
-            - locale%
             - 50
+        calls:
+            - [ setLocale, ['%Locale%'] ]
 
+    # Service destiné à être utilisé dans les vues avec twig
+    sg_platform.twig.antispam_extension:
+        class: SG\PlatformBundle\Twig\AntispamExtension
+        arguments:
+            - "@sg_platform.antispam"
+        tags:
+            - { name: twig.extension }
+    
+    # Mon service perso d'email
     sg_platform.email.application_mailer:
         class: SG\PlatformBundle\Email\ApplicationMailer
         arguments:
             - "@mailer"
     
+    # Fonctionnalité ajouté à un evenement de doctrine
     sg_platform.doctrine_listener.application_creation:
         class: SG\PlatformBundle\DoctrineListener\ApplicationCreationListener
         arguments:
             - "@sg_platform.email.application_mailer"
         tags:
             - { name: doctrine.event_listener, event: postPersist }
+    
+    # Service purger qui permet de remove des annonce trop vieille
+    sg_platform.purger.advert:
+        class: SG\PlatformBundle\Purger\AdvertPurger
+        arguments:
+            - "@doctrine.orm.entity_manager"
+    
+    # Sécurité : validateur créer de toute main pour une contrainte perso
+    sg_platform.validator.antiflood:
+        class: SG\PlatformBundle\Validator\AntifloodValidator
+        arguments: ["@request_stack", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: validator.constraint_validator, alias: sg_platform_antiflood }
+
+    # Nouveau type de champ formulaire
+    sg_platform.form.ckeditor:
+        class: SG\PlatformBundle\Form\CkeditorType
+        tags:
+            - { name: form.type, alias: ckeditor }
+
+    # Action à déclencher sur toutes les pages pour modifier l'HTML
+    sg_platform.beta.html_adder:
+        class: SG\PlatformBundle\Beta\BetaHTMLAdder
+
+    # Listener qui écoute l'event et déclenche l'action
+    sg_platform.beta.listener:
+        class: SG\PlatformBundle\Beta\BetaListener
+        arguments:
+            - "@sg_platform.beta.html_adder"
+            - "2017-09-26"
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: processBeta }
+
+    sg_platform.bigbrother.message_notificator:
+        class: SG\PlatformBundle\Bigbrother\MessageNotificator
+        arguments:
+            - "@mailer"
+
+    sg_platform.bigbrother.message_listener:
+        class: SG\PlatformBundle\Bigbrother\MessageListener
+        arguments:
+            - "@sg_platform.bigbrother.message_notificator"
+            - ["alexandre", "marine", "pierre"]
+        tags:
+            - { name: kernel.event_listener, event: sg_platform.post_message, method: processMessage }

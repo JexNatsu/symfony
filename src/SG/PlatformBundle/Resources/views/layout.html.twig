@@ -1,13 +1,13 @@
-{% extends "::layout.html.twig" %}
+{% extends "SGCoreBundle::layout.html.twig" %}
 
 {% block title %}
-	Annonces - {{ parent() }}
+	{{ "Annonces"|trans }} - {{ parent() }}
 {% endblock %}
 
 {% block body %}
 
 	{# On définit un sous-titre commun à toutes les pages du bundle, par exemple #}
-	<h1>Annonces</h1>
+	<h1>{{ "Annonces"|trans }}</h1>
 
 	<hr>
 

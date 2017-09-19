@@ -24,10 +24,7 @@ public function myFindAll(){
 	// On récupère la Query à partir du QueryBuilder
 	$query = $queryBuilder->getQuery();
 
-	// On récupère les résultats à partir de la Query
 	$results = $query->getResult();
-
-	// On retourne ces résultats
 	return $results;
 }
 
@@ -67,19 +64,21 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository{
 				->orderBy('a.date', 'DESC')
 				->getQuery();
 
-		//return $query->getResult();;
-
 		$query->setFirstResult(($page-1) * $nbPerPage)
 			->setMaxResults($nbPerPage);
 
 		return new Paginator($query, true);
 	}
 
-	public function whereCurrentYear(QueryBuilder $qb){
-		$qb->andWhere('a.date BETWEEN :start AND :end')
-			->setParameter('start', new \Datetime(date('Y').'-01-01'))  // Date entre le 1er janvier de cette année
-			->setParameter('end',   new \Datetime(date('Y').'-12-31'))  // Et le 31 décembre de cette année
-		;
+	public function getAdvertsBefore(\Datetime $date){
+		$query = $this->createQueryBuilder('a')
+				->where('a.updatedAt <= :date')
+				->orWhere('a.updatedAt IS NULL AND a.date <= :date')
+				->andWhere('a.applications IS EMPTY')
+				->setParameter('date', $date)
+				->getQuery();
+
+		return $query->getResult();
 	}
 
 	public function getAdvertWithCategories(array $categoryNames){
@@ -90,5 +89,12 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository{
 		$qb->where($qb->expr()->in('cat.name', $categoryNames));
 
 		return $qb->getQuery()->getResult();
+	}
+
+	public function whereCurrentYear(QueryBuilder $qb){
+		$qb->andWhere('a.date BETWEEN :start AND :end')
+			->setParameter('start', new \Datetime(date('Y').'-01-01'))  // Date entre le 1er janvier de cette année
+			->setParameter('end',   new \Datetime(date('Y').'-12-31'))  // Et le 31 décembre de cette année
+		;
 	}
 }

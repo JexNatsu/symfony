@@ -5,5 +5,7 @@
 				{{ advert.title }}
 			</a>
 		</li>
+	{% else %}
+		<li>{{ "Pas (encore !) d'annonces"|trans }}</li>
 	{% endfor %}
 </ul>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="{{ _charset }}" />
+        <title>{{ "An Error Occurred:"|trans }} {{ status_text }}</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div id="header" class="jumbotron">
+                <h1>{{ "Oops! An Error Occurred"|trans }}</h1>
+                <h2>{{ "The server returned a"|trans }} "{{ status_code }} {{ status_text }}".</h2>
+                <div>
+                    Quelque chose est cassé, on est désolé du dérangement mais faut nous comprendre aussi on n'est pas des robots non plus.<br>
+                    N'en faites pas toute une histoire, en même temps vous n'aviez qu'à pas toucher l'url.
+                </div>
+                <br><br>
+                <p>
+                    <a class="btn btn-primary btn-lg" href="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2">
+                        Retour au site »
+                    </a>
+                </p>
+            </div>
+
+            <hr>
+        </div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    </body>
+</html>

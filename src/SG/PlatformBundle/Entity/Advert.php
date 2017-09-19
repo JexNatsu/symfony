@@ -4,6 +4,11 @@ namespace SG\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use SG\PlatformBundle\Validator\Antiflood;
 
 /**
  * Advert
@@ -11,6 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="advert")
  * @ORM\Entity(repositoryClass="SG\PlatformBundle\Repository\AdvertRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(fields="email", message="Cette addresse email est déjà utilisé.")
  */
 class Advert
 {
@@ -27,6 +33,7 @@ class Advert
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
+     * @Assert\DateTime()
      */
     private $date;
 
@@ -34,6 +41,7 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
+     * @Assert\Length(min=10, minMessage="Le titre doit faire au moins {{ limit }} caractères.")
      */
     private $title;
 
@@ -41,6 +49,7 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="author", type="string", length=255)
+     * @Assert\Length(min=2, minMessage="Le nom de l'auteur doit faire au moins {{ limit }} caractères.")
      */
     private $author;
 
@@ -48,6 +57,8 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="content", type="text")
+     * @Assert\NotBlank(message="Le contenu de l'annonce ne peut être vide")
+     * @Antiflood()
      */
     private $content;
 
@@ -75,7 +86,8 @@ class Advert
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @Assert\Email(message="L'email entrée n'est pas valide")
      */
     private $email;
 
@@ -88,7 +100,8 @@ class Advert
     //#######################################################################################
 
     /**
-     * @ORM\OneToOne(targetEntity="SG\PlatformBundle\Entity\Image", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="SG\PlatformBundle\Entity\Image", cascade={"persist", "remove"})
+     * @Assert\Valid()
      */
     private $image;
 
@@ -112,8 +125,8 @@ class Advert
     public function __construct(){
         // Par défaut, la date de l'annonce est la date d'aujourd'hui
         $this->date           = new \Datetime();
-        $this->categories     = new \ArrayCollection();
-        $this->applications   = new \ArrayCollection();
+        $this->categories     = new ArrayCollection();
+        $this->applications   = new ArrayCollection();
         $this->published      = true;
         $this->nbApplications = 0;
     }
@@ -488,5 +501,21 @@ class Advert
     public function getAdvertSkills()
     {
         return $this->advertSkills;
+    }
+
+    /**
+     * @Assert\Callback
+     */
+    public function isContentValid(ExecutionContextInterface $context){
+        $forbiddenWords = array('démotivation', 'abandon');
+
+        // On vérifie que le contenu ne contient pas l'un des mots
+        if (preg_match('#'.implode('|', $forbiddenWords).'#', $this->getContent())) {
+            // La règle est violée, on définit l'erreur
+            $context
+                ->buildViolation('Contenu invalide car il contient un mot interdit.') // message
+                ->atPath('content')                                                   // attribut de l'objet qui est violé
+                ->addViolation(); // ceci déclenche l'erreur, ne l'oubliez pas
+        }
     }
 }
