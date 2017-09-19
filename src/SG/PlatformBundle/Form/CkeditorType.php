@@ -14,7 +14,7 @@ class CkeditorType extends AbstractType{
         ));
     }
 
-    public function getParent() // On utilise l'héritage de formulaire{
+    public function getParent(){ // On utilise l'héritage de formulaire
         return TextareaType::class;
     }
 }

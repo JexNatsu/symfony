@@ -3,12 +3,13 @@
 namespace SG\PlatformBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class MessagePostEvent extends Event{
 	protected $message;
 	protected $user;
 
-	public function _construct($message, UserInterface $user){
+	public function __construct($message, UserInterface $user){
 		$this->message = $message;
 		$this->user = $user;
 	}
