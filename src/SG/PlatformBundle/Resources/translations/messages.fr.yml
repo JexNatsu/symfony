@@ -34,3 +34,8 @@ Fichier: Fichier
 Published: Publié
 Categories: Catégories
 Save: Sauvegarder
+"L'annonce d'id n'existe pas.": "L'annonce d'id %id% n'existe pas."
+'Annonce bien enregistrée.': 'Annonce bien enregistrée.'
+'Annonce bien modifiée.': 'Annonce bien modifiée.'
+"L'annonce à bien été supprimée": "L'annonce à bien été supprimée"
+page.inexistante: "La page %page% n'existe pas."

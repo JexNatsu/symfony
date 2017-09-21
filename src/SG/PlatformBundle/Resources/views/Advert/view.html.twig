@@ -6,6 +6,12 @@
 
 {% block sgplatform_body %}
 
+	<div>
+		{% for message in app.session.flashbag.get('notice') %}
+			<h2 style="color:red;"> {{ message }} </h2>
+		{% endfor %}
+	</div>
+
 	{% if advert.image is not null %}
 		<img src="{{ asset(advert.image.webPath) }}" alt="{{ advert.image.alt }}">
 	{% endif %}
@@ -58,7 +64,6 @@
 	<hr>
 	
 	{% if listApplications is not empty %}
-
 		{% for application in listApplications %}
 			<i>De {{ application.author }}, le {{ application.date|date('d/m/Y') }}</i>
 			<div class="well">

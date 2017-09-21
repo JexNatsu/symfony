@@ -26,4 +26,9 @@ class CoreController extends Controller
 		return $this->redirectToRoute('sg_core_home');
 		// La méthode longue new RedirectResponse($this->get('router')->generate('oc_core_home')); est parfaitement valable
 	}
+
+	// Pas obligatoire
+	public function redirectionAction(){
+		return $this->redirectToRoute('sg_core_home');
+	}
 }

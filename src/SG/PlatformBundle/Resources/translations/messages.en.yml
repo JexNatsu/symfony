@@ -34,3 +34,8 @@ Fichier: File
 Published: Published
 Categories: Categories
 Save: Save
+"L'annonce d'id n'existe pas.": "The ad with id %id% does not exist."
+'Annonce bien enregistrée.': 'Announcement well recorded.'
+'Annonce bien modifiée.': 'Announcement well modified'
+"L'annonce à bien été supprimée": "The ad was successfully deleted"
+page.inexistante: "The page %page% does not exist."

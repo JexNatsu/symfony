@@ -1,9 +1,19 @@
 sg_core_home:
-    path: /
+    path: /{_locale}
     defaults:
+        # _locale: fr -> methode redirection
         _controller: SGCoreBundle:Core:index
+    requirements:
+        _locale: en|fr
 
 sg_core_contact:
-    path: /contact
+    path: /{_locale}/contact
     defaults:
         _controller: SGCoreBundle:Core:contact
+    requirements:
+        _locale: en|fr
+
+sg_core_redirection:
+    path: /
+    defaults:
+        _controller: SGCoreBundle:Core:redirection

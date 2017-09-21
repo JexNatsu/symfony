@@ -36,8 +36,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class AdvertController extends Controller{
 	public function indexAction($page){
+		$translator = $this->get('translator');
+
         if ($page < 1) {
-			throw new NotFoundHttpException('Page "'. $page .'" inexistante.');
+			throw new NotFoundHttpException($translator->trans('page.inexistante', array('%page%' => $page)));
 		}
 
 		$nbPerPage = 3;
@@ -46,7 +48,7 @@ class AdvertController extends Controller{
 		$nbPages = ceil(count($listAdverts) / $nbPerPage);
 
 		if ($page > $nbPages && $nbPages > 0) {
-			throw $this->createNotFoundException("La page ". $page ." n'existe pas.");
+			throw $this->createNotFoundException($translator->trans('page.inexistante', array('%page%' => $page)));
 		}
 
 		return $this->render('SGPlatformBundle:Advert:index.html.twig', array(
@@ -80,6 +82,7 @@ class AdvertController extends Controller{
 	 * @Security("has_role('ROLE_AUTEUR')")
 	 */
 	public function addAction(Request $request){
+		$translator = $this->get('translator');
 	    $advert = new Advert();
 
 	    //$form = $this->get('form.factory')->create(AdvertType::class, $advert);
@@ -95,27 +98,23 @@ class AdvertController extends Controller{
 			$em->persist($advert);
 			$em->flush();
 
-			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+			$request->getSession()->getFlashBag()->add('notice', $translator->trans('Annonce bien enregistrée.'));
 			return $this->redirectToRoute('sg_platform_view', array('id' => $advert->getId()));
 		}
 
 		return $this->render('SGPlatformBundle:Advert:add.html.twig', array('form' => $form->createView()));
 	}
 
-	public function editAction($id, Request $request){
+	public function editAction(Advert $advert, Request $request){
+		$translator = $this->get('translator');
 		$em = $this->getDoctrine()->getManager();
-	    $advert = $em->getRepository('SGPlatformBundle:Advert')->find($id);
-
-	    if ($advert === null){
-	    	throw new NotFoundHttpException("L'annonce d'id ". $id ." n'existe pas.");
-	    }
 
 	    $form = $this->createForm(AdvertEditType::class, $advert);
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			$em->flush();
 
-			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
+			$request->getSession()->getFlashBag()->add('notice', $translator->trans('Annonce bien modifiée.'));
 			return $this->redirectToRoute('sg_platform_view', array('id' => $advert->getId()));
 		}
 
@@ -123,9 +122,10 @@ class AdvertController extends Controller{
 	}
 
 	public function deleteAction($id, Request $request){
+		$translator = $this->get('translator');
 		$em = $this->getDoctrine()->getManager();
+		
 		$advert = $em->getRepository('SGPlatformBundle:Advert')->find($id);
-
 		if ($advert === null) {
 			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
 		}
@@ -136,7 +136,7 @@ class AdvertController extends Controller{
 			$em->remove($advert);
 			$em->flush();
 
-			$request->getSession()->getFlashBag()->add('info', "L'annonce à bien été supprimée");
+			$request->getSession()->getFlashBag()->add('info', $translator->trans("L'annonce à bien été supprimée"));
 			return $this->redirectToRoute('sg_platform_home');
 		}
 
